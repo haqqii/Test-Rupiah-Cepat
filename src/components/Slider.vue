@@ -1,10 +1,10 @@
 <template>
   <div class="slider">
-    <div class="slides" :style="{ transform: `translateX(-${currentIndex * 100}%)` }">
-      <img v-for="(image, index) in images" :key="index" :src="image" alt="Image">
+    <div class="slider-container" :style="{ transform: `translateX(-${currentIndex * 500}px)` }">
+      <img v-for="(image, index) in images" :key="index" :src="image" :alt="'Image ' + (index + 1)">
     </div>
-    <button @click="prevSlide" class="prevBtn">Previous</button>
-    <button @click="nextSlide" class="nextBtn">Next</button>
+    <button @click="goToPrevImage">Previous</button>
+    <button @click="goToNextImage">Next</button>
   </div>
 </template>
 
@@ -12,43 +12,47 @@
 export default {
   data() {
     return {
-      images: ['image1.jpg', 'image2.jpg', 'image3.jpg'],
-      currentIndex: 0
+      currentIndex: 0,
+      images: ['image1.jpg', 'image2.jpg', 'image3.jpg']
     };
   },
   methods: {
-    prevSlide() {
-      this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
-    },
-    nextSlide() {
+    goToNextImage() {
       this.currentIndex = (this.currentIndex + 1) % this.images.length;
+    },
+    goToPrevImage() {
+      this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
     }
+  },
+  mounted() {
+    this.interval = setInterval(this.goToNextImage, 3000);
+    this.$el.addEventListener('click', () => {
+      clearInterval(this.interval);
+    });
+  },
+  beforeDestroy() {
+    clearInterval(this.interval);
   }
 };
 </script>
 
 <style scoped>
 .slider {
-  position: relative;
-  width: 80%;
-  margin: 0 auto;
+  width: 500px;
   overflow: hidden;
 }
 
-.slides {
+.slider-container {
   display: flex;
   transition: transform 0.3s ease-in-out;
 }
 
-.slides img {
-  width: 100%;
+.slider-container img {
+  width: 500px;
   height: auto;
 }
 
-.prevBtn,
-.nextBtn {
-  padding: 5px 10px;
-  font-size: 16px;
+button {
   margin-top: 10px;
 }
 </style>

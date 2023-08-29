@@ -1,17 +1,26 @@
 <template>
   <div class="question">
-    <h2>{{ question }}</h2>
-    <p>{{ answer }}</p>
-    <div class="example">
-      <h3>Example:</h3>
-      <pre>{{ example }}</pre>
+    <h2>{{ number }}</h2>
+    <p>{{ question }}</p>
+    <h3>Answer:</h3>
+    <div class="example" v-if="isCode">
+      <pre>{{ answer }}</pre>
     </div>
+    <div v-else>
+      <p v-html="answerT"></p>
+    </div>
+    <pre>{{opsional}}</pre>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['question', 'answer', 'example']
+  props: ['number', 'question', 'answerT', 'answer', 'opsional'],
+  computed: {
+    isCode() {
+      return this.answer !== undefined;
+    },
+  },
 };
 </script>
 
